@@ -1,0 +1,7 @@
+interface:
+  display_name: "Skilled Task Executor"
+  short_description: "Execute tracker tasks with checkpoints"
+  brand_color: "#2563EB"
+  default_prompt: "Use $skilled-task-executor to implement the referenced task from my connected tracker."
+policy:
+  allow_implicit_invocation: true
