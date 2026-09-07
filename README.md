@@ -10,6 +10,7 @@ A tool-agnostic coding-agent skill for executing software development tasks from
 [![Access: MCP Tools](https://img.shields.io/badge/ACCESS-MCP_Tools-0F766E?style=flat-square)](references/capability-contract.md)
 [![Modes: 3](https://img.shields.io/badge/MODES-3-DB2777?style=flat-square)](#choose-your-mode)
 [![Validation: Scenarios](https://img.shields.io/badge/VALIDATION-Scenarios-525252?style=flat-square)](tests/scenarios.md)
+[![skills.sh](https://skills.sh/b/myckhel/skilled-task-executor)](https://skills.sh/myckhel/skilled-task-executor)
 
 **Read the task. Respect the context. Show the evidence.**
 
@@ -39,7 +40,27 @@ This repository contains a skill package: instructions, protocol references, exa
 
 ### 1. Install the skill
 
-In Codex, ask the skill installer:
+With Node.js and npm available, install through the [Vercel skills CLI](https://github.com/vercel-labs/skills):
+
+```sh
+npx skills add myckhel/skilled-task-executor --skill skilled-task-executor
+```
+
+The CLI lets you choose your target agents. To install specifically for Codex in the current project:
+
+```sh
+npx skills add myckhel/skilled-task-executor --skill skilled-task-executor --agent codex
+```
+
+Add `--global` for a personal installation across projects. To preview the available skill without installing:
+
+```sh
+npx skills add myckhel/skilled-task-executor --list
+```
+
+Skills are hosted in their own repositories. According to the [skills.sh listing guide](https://skills.sh/docs/faq), leaderboard discovery happens through CLI installation telemetry; no submission PR to the CLI repository is required.
+
+Alternatively, in Codex, ask the skill installer:
 
 ```text
 Use $skill-installer to install the skill at the root of
