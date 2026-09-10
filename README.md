@@ -20,6 +20,9 @@ A tool-agnostic coding-agent skill for executing software development tasks from
 
 ---
 
+<img width="1536" height="1024" alt="ChatGPT Image Sep 10, 2026, 09_53_20 PM" src="https://github.com/user-attachments/assets/859d19ed-0053-4909-9191-0afb68debefb" />
+
+
 ## What it does
 
 Give your coding agent a task reference and a repeatable way to carry it through discovery, implementation, validation, and handoff. Start small by listing tasks, review a ticket before committing to it, or authorize an implementation workflow with checkpoints for external actions.
