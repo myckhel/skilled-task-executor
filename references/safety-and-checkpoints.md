@@ -89,7 +89,7 @@ Present and obtain agreement on a flat-task alternative before replacing a reque
 
 ## Task Update And Transition Checkpoints
 
-Task comments, field updates, and transitions are external state changes. In interactive mode, ask before writing unless the user specifically requested task synchronization.
+Task comments, field updates, and transitions are external state changes. An explicit implementation request authorizes the active task's non-final in-progress transition immediately before edits, in both interactive and autonomous modes, unless the user prohibits tracker changes. Follow the [implementation-start gate](execution-workflow.md#implementation-start-gate); do not ask for redundant approval for that transition. Host permission requirements still apply. Other interactive task writes require authorization as before.
 
 In autonomous mode, progress comments and appropriate non-final transitions are allowed when the user asked to complete the tracker workflow, but final completion still requires confidence that the task is actually complete. Merging, closing, or marking done requires explicit authorization unless the user clearly requested that final outcome.
 
@@ -100,7 +100,7 @@ Always inspect available statuses or transitions before moving a task. Do not in
 Stop and ask for user input when:
 
 - required task content is missing;
-- a required live capability is unavailable (PM drafting can continue from supplied context without task read/search/create tools);
+- a required live capability is unavailable (PM drafting can continue from supplied context; definitively unavailable implementation-start sync permits local work only after disclosure under the implementation-start gate);
 - platform access would require extracting credentials or bypassing a connector tool;
 - destructive git cleanup is needed;
 - unrelated user changes block implementation;

@@ -33,6 +33,7 @@ The skill defines the workflow. Your MCPs and IDE integrations perform the opera
 | Task creation or a feature breakdown | Resolve the destination, check for duplicates where supported, and publish requested tasks through MCP tools. |
 | A task review | Read requirements and relevant code, report findings, and preserve existing state. |
 | An implementation | Understand acceptance criteria, inspect the repository, plan, edit, and validate. |
+| Implementation start | Move the active task to its discovered in-progress state through MCP before the first edit, or report unavailable sync immediately. |
 | A review handoff | Review the diff, follow commit/PR checkpoints, and retain the task reference. |
 | A progress update | Use available task tools and report exactly which updates succeeded. |
 
@@ -151,6 +152,8 @@ Explicit, resolved creation requests authorize publication without a second conf
 | `review-only` | Inspection, analysis, and estimates | Reads task and code context without modifying code, git, PRs, or task state. |
 
 See [safety and checkpoints](references/safety-and-checkpoints.md) for the complete action boundaries. Autonomous mode does not grant unrestricted permission to merge or mark tasks complete.
+
+Requesting implementation authorizes the active task's in-progress transition in either implementation mode. The agent must handle it before editing, confirm the result, and avoid repeating it if already in-progress. Failed or uncertain transitions pause edits for recovery; unavailable tools or an explicit no-tracker-writes instruction are disclosed as degraded sync. Planning, reviews, and task creation alone do not trigger this transition.
 
 ## How the workflow fits together
 

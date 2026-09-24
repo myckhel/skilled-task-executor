@@ -239,3 +239,23 @@ Expected: confirm publication, pass its reference and requirements to executor, 
 ## 26. Trigger Boundaries
 
 Expected: "create a ticket" and "act as PM" route to the PM workflow; "fix this function" without task-management context does not create tasks or activate PM behavior. Existing task listing and review retain their current behavior.
+
+## 27. In-Progress Before First Edit
+
+Run "Implement TASK-123" in interactive and autonomous modes. Fixture: task is queued; metadata maps in-progress to a platform-specific state ID; the transition returns that state. Complete other scope/branch checkpoints first.
+
+Expected call order: inspect current state and allowed transitions, invoke transition with the discovered ID, confirm success, then edit code/tests. No extra approval for this start transition. A comment or plan alone fails this scenario. Repeat with a connector exposing only a supported status-field update: it can satisfy conceptual `task.transition`.
+
+## 28. Already Started And Resumed Work
+
+Fixture: current task is already in-progress. Expected: record `already_in_progress`, no duplicate write, then implement. Repeat after resuming and for a PM-created task: recheck state before edits. With multiple subtasks, transition only the task currently starting, not untouched siblings.
+
+## 29. Start Transition Recovery
+
+Fixture variants: no transition support; explicit no-tracker-writes instruction; permission denial; timeout; ambiguous mapping; completed task.
+
+Expected: missing support or prohibited writes are reported before edits, recorded as unavailable/skipped, and allow authorized local work. Denied/failed/uncertain writes pause edits for recovery or explicit local-continuation choice. Re-read timeout outcomes before retry; a confirmed in-progress state permits continuation. Ambiguous mappings and completed tasks require user resolution, not guessed states or automatic reopening.
+
+## 30. No Premature In-Progress Transition
+
+Requests: list tasks, plan implementation, review-only assessment, and PM task creation without implementation. Expected: no implementation-start transition. For create-and-implement, create first, finish implementation checkpoints, transition the confirmed task, then edit. Final handoff reports the start-sync outcome truthfully.

@@ -54,7 +54,22 @@ When implementation requires code changes, inspect the current branch and apply 
 
 Recommended branch names should be derived from available task identifiers and title text, but never assume a required naming convention unless the repository has one.
 
+## Implementation-Start Gate
+
+After scope and branch checkpoints are resolved, immediately before the first implementation edit (including tests), synchronize the active task to `implementation_started`. Do not defer this to validation, a progress comment, or the final handoff.
+
+1. Inspect the current task state and available workflow transitions through exposed MCP tools. Discover this capability during task discovery so it is ready at implementation start. Map the platform's actual in-progress equivalent; never assume a literal status name or ID. A supported status-field update or section move can implement conceptual `task.transition`.
+2. Treat the user's implementation request as authorization for this specific non-final transition in both interactive and autonomous modes, subject to host permissions and explicit instructions not to change the tracker. It does not authorize other field changes, comments, completion, or reopening a completed task.
+3. If the task is already in the mapped in-progress state, record `already_in_progress` and avoid a duplicate write. If it is completed/cancelled, or the mapping is ambiguous, resolve that with the user before editing; do not silently reopen or choose a state.
+4. Otherwise invoke the transition tool and confirm the resulting state from its response or a subsequent read. Record the result before proceeding. A written plan, internal state label, or comment saying "In Progress" does not perform the transition.
+5. If the connector definitively lacks transition support or the user forbids tracker writes, report this before editing and record `unavailable` or `skipped_by_user`. Continue authorized local implementation with degraded sync. Pasted-only task context follows this same unavailable path.
+6. If an available transition fails, is denied, or returns an uncertain result, report it and pause implementation for recovery or the user's explicit choice to continue locally. Re-read uncertain results before any retry; do not blindly repeat a write or claim success.
+
+Apply this gate to each task/subtask when its own implementation starts, including after PM creation. Do not move an entire backlog or untouched sibling tasks into progress. On resumption, check the active task again; an already-in-progress task needs no repeated transition. Read-only discovery, planning, review, and PM creation alone do not trigger the gate.
+
 ## Implementation
+
+Begin edits only after the implementation-start gate has a confirmed or explicitly disclosed degraded outcome.
 
 Make the smallest coherent code changes that satisfy the task. Follow repository patterns, tests, style, and ownership boundaries. Avoid unrelated refactors. Keep task-to-code traceability in mind: every meaningful change should map back to a task requirement or validation need.
 
@@ -92,6 +107,8 @@ Then follow checkpoint policy for commit, push, and PR creation. PR descriptions
 ## Task Synchronization
 
 Use `task-state-and-sync.md` to add comments, update fields, or transition semantic state when supported and allowed. If a task update is unavailable or not authorized, report that truthfully.
+
+This handoff phase does not replace the implementation-start transition, which must have been handled before edits.
 
 ## Completion
 

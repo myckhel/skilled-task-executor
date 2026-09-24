@@ -48,11 +48,12 @@ For implementation work, follow the progressive workflow in [references/executio
 3. Inspect the repository, current branch, git status, recent related work, likely files, and validation commands.
 4. Produce or confirm an implementation plan before edits when the task is non-trivial.
 5. Use the branch checkpoint policy before creating or changing branches.
-6. Implement only within the task scope while preserving unrelated user changes.
-7. Run available validation and record truthful results.
-8. Offer manual testing when automated validation is insufficient or the feature is user-facing.
-9. Review the diff before commit.
-10. Use checkpoints for commit, push, PR creation, task sync, and completion.
+6. Immediately before the first implementation edit, run the implementation-start gate: inspect current task state and available transitions, invoke the MCP tool to move the active task to the platform's in-progress equivalent, and confirm success. An implementation request authorizes this specific transition in interactive and autonomous modes unless the user forbids tracker changes. If already in-progress, record that without another write. Resolve failures or explicitly report unavailable sync before editing; never silently skip this gate. See [references/execution-workflow.md](references/execution-workflow.md#implementation-start-gate).
+7. Implement only within the task scope while preserving unrelated user changes.
+8. Run available validation and record truthful results.
+9. Offer manual testing when automated validation is insufficient or the feature is user-facing.
+10. Review the diff before commit.
+11. Use checkpoints for commit, push, PR creation, task sync, and completion.
 
 Use [references/safety-and-checkpoints.md](references/safety-and-checkpoints.md) for approval boundaries and unsafe actions.
 
