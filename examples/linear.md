@@ -10,6 +10,8 @@ Use $skilled-task-executor to pick up LIN-248 and open a PR when it is ready.
 
 ## Capability Mapping
 
+PM example: "Create an issue in the client portal team for expired sessions." Resolve the team/project and any required fields through exposed tools; map issue creation to `task.create`. Use `task.subtask.create` only if the connector supports a parent relationship. Apply the [PM workflow](../references/task-creation-workflow.md); a draft request does not publish an issue.
+
 Possible mapping:
 
 - `task.read`: read the Linear issue by key or URL.

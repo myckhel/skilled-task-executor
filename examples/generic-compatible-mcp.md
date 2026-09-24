@@ -10,11 +10,13 @@ Use $skilled-task-executor to work on the task assigned to me about checkout tax
 
 ## Minimum Capability
 
-At least one of these must be available:
+For the existing-task request above, choose the capability needed:
 
 - `task.list`: enumerate tasks in the requested collection.
 - `task.search`: find the user's assigned task.
 - `task.read`: read a directly referenced task.
+
+For PM publication, use `task.create` and child support when needed. Read/search is not mandatory if destination and creation fields are already resolved; disclose when duplicate search is unavailable. With only read access, return drafts and report that creation is unavailable. Drafting from a supplied brief needs no connector. See [PM examples](project-manager.md).
 
 The agent must inspect the runtime's callable connectors and invoke the capability required by the objective. If no matching connector is installed, it uses any available host installation-suggestion flow and prompts the user to install the named platform integration. If installed but unauthenticated, it prompts the user to connect it. Pasted task content is only a fallback for reading or implementing a known task, not for live list or search requests.
 

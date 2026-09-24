@@ -1,6 +1,6 @@
 # Safety And Checkpoints
 
-This workflow must protect user work, external systems, and task history. Checkpoints are deliberate pauses before meaningful state changes unless the user has explicitly authorized an autonomous path and the action is low-risk.
+This workflow must protect user work, external systems, and task history. Checkpoints are deliberate pauses before meaningful state changes unless the applicable action is already authorized. Explicit, resolved task-creation requests authorize that publication even in interactive mode; git, PR, and task-sync actions retain their specific policies below.
 
 ## Connector Credential Protection
 
@@ -81,6 +81,12 @@ Before creating a PR, summarize:
 
 If `pr.create` is unavailable, prepare the title and body and stop there. Never claim a PR exists without a returned URL, number, or provider reference.
 
+## Task Creation Checkpoint
+
+Use the [PM creation workflow](task-creation-workflow.md). Explicit, sufficiently scoped creation requests authorize the requested task or breakdown without a second confirmation solely for being an external write. Resolve material ambiguity, required fields, and strong duplicate matches first. Draft-only and review-only requests never publish; selecting autonomous mode does not authorize unsolicited creation.
+
+Present and obtain agreement on a flat-task alternative before replacing a requested parent/subtask structure. Preserve confirmed creations on partial failure. Reconcile uncertain writes before retries, stop if their outcome remains unknown, and never delete successful items as automatic rollback. Creation alone does not authorize code changes or implementation.
+
 ## Task Update And Transition Checkpoints
 
 Task comments, field updates, and transitions are external state changes. In interactive mode, ask before writing unless the user specifically requested task synchronization.
@@ -94,7 +100,7 @@ Always inspect available statuses or transitions before moving a task. Do not in
 Stop and ask for user input when:
 
 - required task content is missing;
-- no required task list/search/read capability or acceptable pasted task details are available;
+- a required live capability is unavailable (PM drafting can continue from supplied context without task read/search/create tools);
 - platform access would require extracting credentials or bypassing a connector tool;
 - destructive git cleanup is needed;
 - unrelated user changes block implementation;

@@ -24,6 +24,7 @@ Maintain this shape internally or in notes when a task run is complex:
 
 ```yaml
 execution:
+  role: executor
   mode: interactive
   task:
     platform: unknown
@@ -73,6 +74,33 @@ execution:
 ```
 
 Use empty strings or omitted fields when facts are unavailable. Do not invent data to complete the shape.
+
+For PM work, set `role: project-manager` and add this creation state under `execution`. Omit irrelevant implementation/git fields. Local draft keys identify pending items; they are not platform task IDs.
+
+```yaml
+creation:
+  intent: draft
+  destination:
+    platform: ""
+    workspace_id: ""
+    project_id: ""
+    label: ""
+  duplicate_check: unavailable
+  items:
+    - draft_key: task-1
+      parent_draft_key: ""
+      title: ""
+      description: ""
+      requested_fields: {}
+      publication: draft
+      task_id: ""
+      task_url: ""
+      parent_task_id: ""
+      unapplied_fields: []
+      error: ""
+```
+
+`intent` is `draft` or `publish`; duplicate checks are `not_run`, `checked`, `matches_found`, or `unavailable`. Per-item publication is `draft`, `pending`, `created`, `failed`, or `uncertain`. Record `created` only with a tool-confirmed reference; record a missing/ambiguous write confirmation as `uncertain`. Preserve successful references across retries and report the unresolved items individually. These are internal outcomes, not tracker statuses. Publishing a task never means its implementation is completed.
 
 ## Structured Task Comments
 
@@ -150,6 +178,6 @@ If a platform lacks a capability, adapt and say exactly what changed:
 - No `task.comment`: keep updates in the chat only.
 - No `task.update`: do not edit task fields.
 - No `task.transition`: comment if possible, but do not claim status changed.
-- No task write capabilities: complete local implementation workflow and report that task sync was unavailable.
+- No task write capabilities: for authorized implementation, complete local work and report unavailable sync; for PM work, return unpublished drafts and setup recovery, without starting implementation.
 
 Task synchronization is successful only when the connected tool returns confirmation. If confirmation is absent, report the update as attempted or unavailable, not complete.

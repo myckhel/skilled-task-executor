@@ -10,6 +10,8 @@ Use $skilled-task-executor to review PROJ-123 and tell me what needs to change.
 
 ## Capability Mapping
 
+PM example: "Create a task and subtasks for password reset in the client portal project." Discover valid issue types, required fields, and project/hierarchy constraints before creating anything. Map the exposed tools to `task.create` and `task.subtask.create`; do not assume every project permits subtasks. Use the [PM workflow](../references/task-creation-workflow.md) for drafts, publication, and hierarchy alternatives.
+
 Possible mapping:
 
 - `task.read`: read Jira issue fields, description, comments, links, and acceptance criteria.

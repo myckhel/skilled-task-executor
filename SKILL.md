@@ -1,34 +1,39 @@
 ---
 name: skilled-task-executor
-description: Search, list, read, review, or execute software-development tasks from connected task platforms using a tool-agnostic workflow. Use when a request names a task platform, task, ticket, issue, assigned work item, or project-tracker item; do not use for ordinary coding requests that have no task-management context.
+description: Draft, create, break down, search, review, or execute software-development tasks using a tool-agnostic workflow. Use for PM task planning, ticket creation, or requests involving a task platform or tracker item; do not use for ordinary coding requests without task-management context.
 metadata:
-  short-description: Execute tracker tasks with agent checkpoints
+  short-description: Plan, create, and execute tracker tasks
 ---
 
 # Skilled Task Executor
 
-Use this skill when the user asks the agent to access a task platform or work from an existing task-management item, such as listing tasks in a project, reading an assigned item, implementing a ticket, or reviewing an issue.
+Use this skill to plan or create task-management items, access a task platform, or work from an existing task, ticket, or issue.
 
 The central rule is: **the skill owns the workflow; connected tools own the integration.** Do not hardcode platform names, status names, branch names, MCP tool names, source-control providers, CI providers, or test frameworks unless the user or repository makes them explicit.
 
-## Operating Modes
+## Roles And Operating Modes
 
-- `interactive`: Default. Pause before meaningful state-changing actions, including branch creation, task updates, commits, pushes, PR creation, merges, and completion transitions.
+- `project-manager`: Route "create a task", "break this feature into tickets", or "act as PM" here. Read [references/task-creation-workflow.md](references/task-creation-workflow.md) before drafting or publishing tasks. Inspect relevant repository context without code or git mutations; begin implementation only if also requested.
+- `executor`: Existing task discovery, review, and implementation behavior. Ordinary coding requests do not imply task creation.
+
+Roles describe the work; modes govern execution. PM role selection alone does not authorize publication. Draft/plan requests remain unpublished; explicit, sufficiently scoped create requests authorize the requested publication without a redundant confirmation.
+
+- `interactive`: Default. Pause at state-changing checkpoints unless the action is already explicitly authorized. In particular, resolved task creation requests do not need a second approval. Existing git, PR, and task-sync checkpoints still apply.
 - `autonomous`: Use only when the user explicitly asks for end-to-end execution. Continue through authorized low-risk phases, but still pause for ambiguity, destructive actions, missing capabilities, external transmission that needs approval, merges, or permission-sensitive actions.
 - `review-only`: Use when the user asks to review, inspect, analyze, estimate, or assess a task without implementation. Do not modify code, git state, PRs, or task state.
 
 ## Required Start
 
-Before answering or acting on task-platform data:
+Drafting from supplied context requires no connector. For live task-platform data or publication:
 
-1. Identify the requested platform, scope, and operation: list, search, read, review, or execute.
+1. Identify the role, mode, requested platform, scope, and operation: draft, create, list, search, read, review, or execute.
 2. Inspect the runtime's callable tools, apps, MCPs, or connector registry. Do not infer availability from the platform name, a configuration file, stored credentials, or this skill's examples.
 3. Map the matching connected integration to the required conceptual capability and invoke the runtime-exposed MCP or connector tool to fulfill the user's objective. Do not stop after describing which tool could be used.
 4. If the integration exists but is disconnected, disabled, or unauthenticated, ask the user to connect or sign in to it.
 5. If the integration is absent, use the host's connector or plugin discovery and installation-suggestion mechanism when available. Recommend the integration for the platform the user named and prompt the user to install or enable it. Do not install anything without the authorization required by the host.
 6. If no installation mechanism exists, name the missing platform capability and ask the user to install a compatible connector. Pasted task details are a fallback for reading or implementing a known task, but they cannot satisfy a request to list or search live platform data.
 
-Live task-platform requests require a matching callable capability: `task.list` or `task.search` for collections, and `task.read` for a known item. Stop after the connection or installation prompt when the capability is unavailable. Do not answer from memory, fabricate platform data, or substitute public web browsing for a private task connector unless the user explicitly requests that route.
+Live operations require matching capabilities: `task.list` or `task.search` for collections, `task.read` or a complete readable search record for a known item, and `task.create` for publication (`task.subtask.create` for children). Read/search is not a prerequisite for creating into a resolved destination. If access is missing, stop live operations and provide setup recovery; PM work can still return unpublished drafts. Never fabricate platform data or substitute public web browsing unless explicitly requested.
 
 An MCP configuration entry or access token is not a callable capability. Never read, extract, copy, reveal, or reuse connector credentials to call the platform with `curl`, an HTTP client, an SDK, browser automation, or custom code. If the MCP is configured but its tools are not exposed or a tool call fails, report that connector state and use the host's connection or installation flow; do not bypass the MCP.
 
@@ -80,6 +85,7 @@ Use examples only as platform illustrations, not as built-in integrations:
 - [examples/linear.md](examples/linear.md)
 - [examples/jira.md](examples/jira.md)
 - [examples/generic-compatible-mcp.md](examples/generic-compatible-mcp.md)
+- [examples/project-manager.md](examples/project-manager.md)
 
 When Asana is named and its MCP connector needs installation, connection, or troubleshooting, read [examples/asana.md](examples/asana.md) and surface the official setup guide linked there when the host cannot complete recovery directly.
 

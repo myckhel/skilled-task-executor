@@ -52,8 +52,12 @@ Required for a tracker-backed workflow:
 - `task.list`: enumerate tasks in a workspace, project, team, section, assignee view, or other collection.
 - `task.read`: read a known task by URL, ID, mention, or selected context.
 - `task.search`: find candidate tasks from a query, assignee, project, or natural-language reference.
+- `task.create`: publish a task in a resolved destination with supported fields.
+- `task.subtask.create`: create a child under a confirmed parent; this can map to a creation tool with a parent input.
 
-The required capability depends on the objective. Collection requests need `task.list` or a `task.search` operation capable of applying the requested scope. A known item needs `task.read`, directly or through a search result that contains the complete readable record. If the needed capability is unavailable, follow the connector handshake above and stop until the integration is available.
+The required capability depends on the objective. Collection requests need `task.list` or scoped `task.search`. Reading a known item needs `task.read` or a complete readable search record. Publishing needs `task.create` and child creation support for requested hierarchies; read/search is not a universal prerequisite. Drafting from supplied context requires no platform capabilities. If a required live capability is unavailable, stop that operation and follow connector recovery; PM drafts can still be completed locally in the response.
+
+For creation, discover destination and field metadata through exposed workspace, project, user, and schema tools where available. Map these to conceptual `workspace.list`, `project.search`, `project.read`, `user.search`, and `task.fields.read` as appropriate. These are optional discovery aids, not mandatory tool names: unambiguous provided identifiers and tool schemas may supply enough information. Never infer valid IDs, required fields, or allowed values without evidence. Use scoped task search for duplicate checks when supported; disclose its absence without blocking otherwise valid creation.
 
 Recommended:
 
@@ -61,7 +65,6 @@ Recommended:
 - `task.update`: edit fields or metadata.
 - `task.transition`: move the task through its workflow.
 - `task.assign`: assign or reassign the task when requested.
-- `task.subtask.create`: create follow-up tasks when requested or approved.
 - `task.attachment.read`: inspect linked or attached task artifacts.
 
 ## Repository And Git
@@ -124,6 +127,6 @@ Missing recommended or optional capabilities should narrow the workflow, not fai
 - No PR support: prepare PR metadata and stop after commit or push according to user authorization.
 - No E2E support: run available lower-level validation and offer manual checks.
 
-Missing required live-data capabilities are not a degradable case. Route to connection, installation, or permission recovery instead of pretending the user's platform objective was completed. Pasted task content can replace `task.read` for implementation context, but cannot replace live list, search, update, or transition operations.
+Missing required live capabilities prevent completion of the platform operation. Route to connection, installation, or permission recovery instead of claiming success. Pasted context can support implementation or PM drafts, but cannot replace live list, search, create, update, or transition operations. See [task creation](task-creation-workflow.md) for unpublished drafts and hierarchy alternatives.
 
 Never hide degraded behavior. Completion summaries must distinguish completed actions, skipped actions, unavailable capabilities, and actions awaiting user approval.

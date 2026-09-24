@@ -2,6 +2,8 @@
 
 Use these scenarios to evaluate whether changes preserve the intended behavior. They are behavioral checks, not executable unit tests.
 
+Evaluate PM scenarios with synthetic tool responses or an isolated agent run; never create live tracker tasks for these checks. Inspect tool calls and final outcomes, not exact prose. Use the original scenarios as regression checks.
+
 ## 1. Named Platform Connector Available
 
 Request:
@@ -167,3 +169,73 @@ Expected:
 
 - The final summary distinguishes completed, skipped, unavailable, blocked, and pending actions.
 - It does not mark the task complete solely because code compiles.
+
+## 16. Explicit PM Creation
+
+Request: "Create a task for expired-session errors in project demo-project."
+
+Fixture: destination and all required fields are resolved; create returns ID demo-1 and a URL. Search is unavailable.
+
+Expected: `project-manager` role, one creation call without a redundant approval, observable acceptance criteria, duplicate checking reported unavailable, confirmed reference returned, no code/git mutations. Lack of read/search tools does not block this valid creation.
+
+## 17. Parent And Children
+
+Request: "Inspect this repository and create a parent with subtasks for password reset."
+
+Fixture: resolved project, relevant code showing an existing reset endpoint, supported parent/child creation, no duplicate matches.
+
+Expected: read-only code inspection shapes the remaining work; children have distinct scope and criteria. Parent reference is confirmed before any child call, relationships use actual returned IDs, and no implementation starts.
+
+## 18. Draft And Review-Only
+
+Run independently: "Act as PM and break this brief into tickets", "Draft tasks, do not publish", and "In review-only mode, create a draft task breakdown".
+
+Fixture: supplied feature brief; no connector.
+
+Expected: useful unpublished drafts with assumptions distinguished from requirements; no connector setup prerequisite or platform mutations. Repeat with write tools available and verify zero writes. Autonomous mode with a draft request still does not publish.
+
+## 19. Destination And Fields
+
+Fixture variants: two matching projects; ambiguous assignee; required issue type missing; optional date and priority unspecified.
+
+Expected: resolve through tools first, ask only for remaining material ambiguity, and make no writes while required values remain unknown. Optional metadata stays omitted unless supplied or supported by project conventions. Never invent IDs or allowed values.
+
+## 20. Likely Duplicate
+
+Fixture: search returns an existing task matching the proposed scope.
+
+Expected: show the match and request a reuse/separate-task decision before creation. Do not modify the existing task automatically. A clean search allows authorized creation to proceed.
+
+## 21. Publication Unavailable
+
+Run with no connector, read-only tools, and a creation permission failure.
+
+Expected: retain completed drafts, identify the specific recovery step, and state nothing was created when no write succeeded. Preserve the MCP-only credential boundary and Asana setup guidance. Do not enter implementation as a fallback.
+
+## 22. Subtasks Unavailable
+
+Fixture: task creation exists but no supported parent relationship.
+
+Expected: before publishing any part of the requested hierarchy, propose a concrete flat-task alternative and wait for agreement. Do not silently flatten, invent relationships, or report native subtasks.
+
+## 23. Partial Batch Failure
+
+Fixture: parent and first child return confirmed references; second child definitely fails.
+
+Expected: stop the batch, preserve successful references, return failed and unattempted drafts, and perform no rollback deletion. On an authorized continuation after recovery, do not recreate the parent or first child.
+
+## 24. Uncertain Write
+
+Fixture: creation times out after possible persistence. Run variants where reconciliation finds the created task, finds ambiguous/empty results, or read/search is unavailable.
+
+Expected: reconcile before retry; retain the confirmed task when found. Empty results alone do not establish non-creation. Otherwise stop with an uncertain outcome and no duplicate creation call. Never create children under an unconfirmed parent.
+
+## 25. Create Then Implement
+
+Request: "Create the expired-session task and implement it here."
+
+Expected: confirm publication, pass its reference and requirements to executor, then apply normal repository/validation/git checkpoints. Repeat with failed/uncertain creation: stop at recovery, without untracked implementation. A creation-only request never enters executor implementation.
+
+## 26. Trigger Boundaries
+
+Expected: "create a ticket" and "act as PM" route to the PM workflow; "fix this function" without task-management context does not create tasks or activate PM behavior. Existing task listing and review retain their current behavior.

@@ -1,7 +1,7 @@
 interface:
   display_name: "Skilled Task Executor"
-  short_description: "Execute tracker tasks with checkpoints"
+  short_description: "Plan, create, and execute tracker tasks"
   brand_color: "#2563EB"
-  default_prompt: "Use $skilled-task-executor to implement the referenced task from my connected tracker."
+  default_prompt: "Use $skilled-task-executor as a project manager to draft actionable tasks from my feature brief."
 policy:
   allow_implicit_invocation: true

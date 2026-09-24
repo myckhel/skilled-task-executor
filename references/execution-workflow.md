@@ -4,6 +4,8 @@ This workflow is progressive. The agent gathers context before acting, pauses at
 
 ## Mode Selection
 
+First select the role. Task drafting and creation use the `project-manager` [creation workflow](task-creation-workflow.md); they do not automatically enter repository implementation phases. Existing task execution uses `executor`. For combined requests, begin this workflow after requested publication is confirmed, carrying the created task references forward.
+
 Use `interactive` unless the user clearly requested `autonomous` or `review-only`.
 
 Signals for `autonomous` include: "implement end-to-end", "open a PR", "finish the ticket", or equivalent language that explicitly authorizes a broad implementation workflow. Even in autonomous mode, do not bypass safety rules or permission requirements.

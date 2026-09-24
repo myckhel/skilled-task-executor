@@ -38,6 +38,8 @@ If implementation completes and `task.comment` exists, the agent posts a structu
 
 ## MCP Setup And Recovery
 
+For PM requests such as "create a task in the client workspace", resolve the Asana project and use exposed tools mapped to `task.create`. For requested breakdowns, discover child creation support and retain the confirmed parent reference before creating children. Draft-only requests remain unpublished. Follow the [PM workflow](../references/task-creation-workflow.md) for duplicate checks, missing fields, and partial failures.
+
 When the Asana MCP connector is missing, disconnected, incompletely loaded, or failing authentication, prefer the host's supported installation and connection flow. If the host cannot complete that flow directly, direct the user to Asana's official [Integrating with Asana's MCP Server](https://developers.asana.com/docs/integrating-with-asanas-mcp-server) guide.
 
 Use the guide for current V2 MCP setup, OAuth configuration, workspace access, client connection, tool discovery, and troubleshooting. After setup, rediscover the tools exposed by the runtime and invoke those tools for Asana operations.

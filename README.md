@@ -4,7 +4,7 @@
 
 ### From task to tested change.
 
-A tool-agnostic coding-agent skill for executing software development tasks from connected task-management platforms.
+A tool-agnostic coding-agent skill for planning, creating, and executing software development tasks with connected task-management platforms.
 
 [![Format: Agent Skill](https://img.shields.io/badge/FORMAT-Agent_Skill-2563EB?style=flat-square)](SKILL.md)
 [![Access: MCP Tools](https://img.shields.io/badge/ACCESS-MCP_Tools-0F766E?style=flat-square)](references/capability-contract.md)
@@ -29,6 +29,8 @@ The skill defines the workflow. Your MCPs and IDE integrations perform the opera
 | You ask for | The skill guides the agent to |
 | --- | --- |
 | Tasks in a project | Discover and invoke the matching connector, then return live results. |
+| PM task drafts | Turn a brief and relevant repository context into actionable tasks and acceptance criteria. |
+| Task creation or a feature breakdown | Resolve the destination, check for duplicates where supported, and publish requested tasks through MCP tools. |
 | A task review | Read requirements and relevant code, report findings, and preserve existing state. |
 | An implementation | Understand acceptance criteria, inspect the repository, plan, edit, and validate. |
 | A review handoff | Review the diff, follow commit/PR checkpoints, and retain the task reference. |
@@ -132,9 +134,19 @@ Replace sample identifiers with real task IDs or URLs from your connected tracke
 
 ## Choose your mode
 
+Choose the work through a role: `project-manager` drafts and creates tasks; `executor` handles existing task review and implementation. The PM role is inferred from task-creation intent or selected explicitly and requires no separate installation. Roles work with the modes below.
+
+```text
+Use $skilled-task-executor as PM to create a parent task and subtasks
+for password reset in the client portal project. Inspect relevant code
+and include observable acceptance criteria.
+```
+
+Explicit, resolved creation requests authorize publication without a second confirmation. "Draft", "plan", or "act as PM" alone does not publish. Supplied briefs can become drafts without a connector; publication requires creation tools. PM work does not edit code unless implementation is also requested. See [single-task, breakdown, draft-only, and create-and-implement examples](examples/project-manager.md).
+
 | Mode | Best for | Behavior |
 | --- | --- | --- |
-| `interactive` | Collaborative implementation | Default. Pauses at meaningful state changes such as branches, commits, pushes, PRs, and task updates. |
+| `interactive` | Collaborative work | Default. Resolved, explicitly requested creation proceeds; existing git, PR, and task-sync checkpoints apply. |
 | `autonomous` | Explicitly authorized end-to-end work | Proceeds through clear, authorized phases; stops for ambiguity, missing permissions, destructive actions, and applicable external-action checkpoints. |
 | `review-only` | Inspection, analysis, and estimates | Reads task and code context without modifying code, git, PRs, or task state. |
 
@@ -144,6 +156,11 @@ See [safety and checkpoints](references/safety-and-checkpoints.md) for the compl
 
 ```text
 Task request
+    |
+    +-- PM draft --> Brief / relevant code --> Unpublished task drafts
+    |
+    +-- PM publish --> Resolve tools / destination --> Draft --> Create --> Confirm
+    |                                                           (or report recovery)
     |
     v
 Discover callable platform tools
@@ -164,6 +181,7 @@ The skill maps conceptual capabilities to tools exposed by your environment. Nam
 | Capability group | What is needed |
 | --- | --- |
 | Task discovery | `task.list` or scoped `task.search` for collections; `task.read` or a complete readable search record for a known item. |
+| Task creation | `task.create`, plus `task.subtask.create` for requested children; discover destination and field metadata as needed. Drafting needs no connector. |
 | Task synchronization | Comment, update, and transition tools for the requested changes. Missing write support is reported. |
 | Git and review | Available local git commands and review-provider tools, subject to checkpoints. |
 | Validation | Relevant tests, lint, type checks, builds, CI results, or browser checks available in the project. |
@@ -185,6 +203,8 @@ These are agent instructions. Enforcement also depends on your host's tool permi
 | [Skill entry point](SKILL.md) | Understand triggers, modes, required discovery, and core rules. |
 | [Capability contract](references/capability-contract.md) | Map available tools and handle missing connectors. |
 | [Execution workflow](references/execution-workflow.md) | Follow the phases from task discovery to completion. |
+| [PM creation workflow](references/task-creation-workflow.md) | Draft tasks, resolve publication intent, create hierarchies, and recover from uncertain writes. |
+| [PM examples](examples/project-manager.md) | Try single-task, breakdown, draft-only, and combined execution requests. |
 | [Task state and sync](references/task-state-and-sync.md) | Track execution state and write structured task updates. |
 | [Safety and checkpoints](references/safety-and-checkpoints.md) | Understand approvals, worktree protection, and credential boundaries. |
 | [Asana example](examples/asana.md) | Walk through task listing, implementation, and MCP setup recovery. |
@@ -206,6 +226,8 @@ Platform examples illustrate the protocol; they are not bundled integrations or 
 | The agent extracts a token or falls back to `curl` | Stop that operation and refresh the installed skill. This violates the MCP tool boundary. |
 | Recent skill changes have no effect | Update the installed copy, including its reference files, and refresh the agent session. |
 | PR creation or task transitions are unavailable | Expect prepared PR metadata or a precise report of the skipped task update. |
+| Task creation is unavailable | Receive unpublished drafts and the appropriate connector or permission recovery step. |
+| A creation batch partly fails or times out | Keep confirmed references; reconcile uncertain results before retries to avoid duplicates. |
 
 ## Contributing and validation
 
